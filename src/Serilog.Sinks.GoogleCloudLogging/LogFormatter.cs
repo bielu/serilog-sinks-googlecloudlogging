@@ -11,12 +11,19 @@ using Serilog.Formatting;
 
 namespace Serilog.Sinks.GoogleCloudLogging;
 
-internal class LogFormatter
+internal partial class LogFormatter
 {
     private readonly ITextFormatter? _textFormatter;
 
     private static readonly Dictionary<string, string> LogNameCache = new(StringComparer.Ordinal);
-    private static readonly Regex LogNameUnsafeChars = new("[^0-9A-Z._/-]+", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant);
+
+    #if NET8_0_OR_GREATER
+    [GeneratedRegex("[^0-9A-Z._/-]+", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant)]
+    private static partial Regex LogNameUnsafeChars();
+    #else 
+      private static readonly Regex LogNameUnsafeCharsRegex = new("[^0-9A-Z._/-]+", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant);
+      private static  Regex LogNameUnsafeChars() => LogNameUnsafeCharsRegex;
+    #endif
 
     public LogFormatter(ITextFormatter? textFormatter)
     {
@@ -114,7 +121,7 @@ internal class LogFormatter
         {
             // name must only contain: letters, numbers, underscore, hyphen, forward slash, period
             // limited to 512 characters and must be url-encoded (using 500 char limit here to be safe)
-            var safeChars = LogNameUnsafeChars.Replace(name, "");
+            var safeChars = LogNameUnsafeChars().Replace(name, "");
             var truncated = safeChars.Length > 500 ? safeChars.Substring(0, 500) : safeChars;
             var encoded = UrlEncoder.Default.Encode(truncated);
 

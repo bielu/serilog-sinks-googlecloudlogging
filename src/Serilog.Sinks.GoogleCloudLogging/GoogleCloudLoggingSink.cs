@@ -8,9 +8,9 @@ using Google.Api.Gax.Grpc;
 using Google.Cloud.Logging.Type;
 using Google.Cloud.Logging.V2;
 using Google.Protobuf.WellKnownTypes;
+using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting;
-using Serilog.Sinks.PeriodicBatching;
 
 namespace Serilog.Sinks.GoogleCloudLogging;
 
@@ -62,7 +62,7 @@ public class GoogleCloudLoggingSink : IBatchedLogEventSink
             : new LoggingServiceV2ClientBuilder { JsonCredentials = _sinkOptions.GoogleCredentialJson }.Build();
     }
 
-    public Task EmitBatchAsync(IEnumerable<LogEvent> events)
+    public Task EmitBatchAsync(IReadOnlyCollection<LogEvent> events)
     {
         using var writer = new StringWriter();
         var entries = new List<LogEntry>();
