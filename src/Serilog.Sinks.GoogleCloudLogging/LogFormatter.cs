@@ -116,7 +116,7 @@ internal class LogFormatter
             // limited to 512 characters and must be url-encoded (using 500 char limit here to be safe)
             var safeChars = LogNameUnsafeChars.Replace(name, "");
             var truncated = safeChars.Length > 500 ? safeChars.Substring(0, 500) : safeChars;
-            var encoded = UrlEncoder.Default.Encode(safeChars);
+            var encoded = UrlEncoder.Default.Encode(truncated);
 
             // LogName class creates templated string matching GCP requirements
             logName = new LogName(projectId, encoded).ToString();
