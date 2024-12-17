@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Serilog.Sinks.GoogleCloudLogging;
+namespace Serilog.Sinks.LazyGoogleCloudLogging;
 
 public class GoogleCloudLoggingSinkOptions
 {

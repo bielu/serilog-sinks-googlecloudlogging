@@ -9,7 +9,7 @@ using Google.Protobuf.WellKnownTypes;
 using Serilog.Events;
 using Serilog.Formatting;
 
-namespace Serilog.Sinks.GoogleCloudLogging;
+namespace Serilog.Sinks.LazyGoogleCloudLogging;
 
 internal partial class LogFormatter
 {

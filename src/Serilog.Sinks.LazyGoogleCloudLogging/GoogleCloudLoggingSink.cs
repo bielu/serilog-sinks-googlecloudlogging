@@ -12,12 +12,12 @@ using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting;
 
-namespace Serilog.Sinks.GoogleCloudLogging;
+namespace Serilog.Sinks.LazyGoogleCloudLogging;
 
 public class GoogleCloudLoggingSink : IBatchedLogEventSink
 {
     private readonly GoogleCloudLoggingSinkOptions _sinkOptions;
-    private readonly LoggingServiceV2Client _client;
+    private readonly Lazy<LoggingServiceV2Client> _client;
     private readonly MonitoredResource _resource;
     private readonly string _projectId;
     private readonly string _logName;
@@ -57,9 +57,9 @@ public class GoogleCloudLoggingSink : IBatchedLogEventSink
         }
 
         // logging client for google cloud apis
-        _client = _sinkOptions.GoogleCredentialJson.IsNullOrWhiteSpace()
+        _client = new Lazy<LoggingServiceV2Client>(()=>_sinkOptions.GoogleCredentialJson.IsNullOrWhiteSpace()
             ? LoggingServiceV2Client.Create()
-            : new LoggingServiceV2ClientBuilder { JsonCredentials = _sinkOptions.GoogleCredentialJson }.Build();
+            : new LoggingServiceV2ClientBuilder { JsonCredentials = _sinkOptions.GoogleCredentialJson }.Build());
     }
 
     public Task EmitBatchAsync(IReadOnlyCollection<LogEvent> events)
@@ -80,7 +80,7 @@ public class GoogleCloudLoggingSink : IBatchedLogEventSink
         }
 
         return entries.Count > 0
-            ? _client.WriteLogEntriesAsync(_logName, _resource, _sinkOptions.Labels, entries, CancellationToken.None)
+            ? _client.Value.WriteLogEntriesAsync(_logName, _resource, _sinkOptions.Labels, entries, CancellationToken.None)
             : Task.CompletedTask;
     }
 

@@ -6,7 +6,7 @@ using Serilog.Events;
 using Serilog.Formatting;
 using Serilog.Formatting.Display;
 
-namespace Serilog.Sinks.GoogleCloudLogging;
+namespace Serilog.Sinks.LazyGoogleCloudLogging;
 
 public static class GoogleCloudLoggingSinkExtensions
 {

@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
-using Serilog.Sinks.GoogleCloudLogging;
+using Serilog.Sinks.LazyGoogleCloudLogging;
 
 // enable serilog to log out internal messages to console for debugging
 Serilog.Debugging.SelfLog.Enable(Console.WriteLine);
@@ -40,31 +40,31 @@ try
             UseSourceContextAsLogName = true,
         };
 
-        builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console().WriteTo.GoogleCloudLogging(options).MinimumLevel.Is(LogEventLevel.Verbose));
+        builder.Host.UseSerilog((_, lc) => lc.WriteTo.Console().WriteTo.GoogleCloudLogging(options).MinimumLevel.Is(LogEventLevel.Verbose));
     }
 
 
     var app = builder.Build();
     app.UseSerilogRequestLogging();
 
-    app.MapGet("/", ([FromServices] Microsoft.Extensions.Logging.ILogger<Program> _logger, [FromServices] ILoggerFactory _loggerFactory) =>
+    app.MapGet("/", ([FromServices] ILogger<Program> logger, [FromServices] ILoggerFactory loggerFactory) =>
     {
         Log.Information("Test info message with serilog");
         Log.Debug("Test debug message with serilog");
 
-        _logger.LogInformation("Test info message with ILogger abstraction");
-        _logger.LogDebug("Test debug message with ILogger abstraction");
+        logger.LogInformation("Test info message with ILogger abstraction");
+        logger.LogDebug("Test debug message with ILogger abstraction");
 
         // ASP.NET Logger Factory accepts custom log names but these must follow the rules for Google Cloud logging:
         // https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
         // Names must only include upper and lower case alphanumeric characters, forward-slash, underscore, hyphen, and period. No spaces!
-        var anotherLogger = _loggerFactory.CreateLogger("AnotherLogger");
+        var anotherLogger = loggerFactory.CreateLogger("AnotherLogger");
         anotherLogger.LogInformation("Test message with ILoggerFactory abstraction and custom log name");
 
-        _logger.LogInformation(eventId: new Random().Next(), message: "Test message with random event ID");
-        _logger.LogInformation("Test message with List<string> {list}", new List<string> { "foo", "bar", "pizza" });
-        _logger.LogInformation("Test message with List<int> {list}", new List<int> { 123, 456, 7890 });
-        _logger.LogInformation("Test message with Dictionary<string,object> {dict}", new Dictionary<string, object>
+        logger.LogInformation(eventId: new Random().Next(), message: "Test message with random event ID");
+        logger.LogInformation("Test message with List<string> {list}", new List<string> { "foo", "bar", "pizza" });
+        logger.LogInformation("Test message with List<int> {list}", new List<int> { 123, 456, 7890 });
+        logger.LogInformation("Test message with Dictionary<string,object> {dict}", new Dictionary<string, object>
             {
                 { "valueAsNull", null },
                 { "valueAsBool", true },
@@ -83,7 +83,7 @@ try
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "");
+            logger.LogError(e, "");
         }
 
         var url = $"https://console.cloud.google.com/logs/viewer";

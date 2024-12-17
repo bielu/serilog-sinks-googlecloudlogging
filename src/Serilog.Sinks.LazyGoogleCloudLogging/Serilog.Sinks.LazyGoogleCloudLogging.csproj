@@ -1,26 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageVersion>5.0.0</PackageVersion>
-    <Description>Serilog sink that writes events to Google Cloud Platform (Stackdriver) Logging.</Description>
-    <Authors>Mani Gandham</Authors>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Description>Serilog sink that writes events to Google Cloud Platform (Stackdriver) Logging. This version use lazy loading for client so it does work with serilog expressions.</Description>
+    <Authors>Mani Gandham,Arkadiusz Biel</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>serilog-sink-nuget.png</PackageIcon>
     <PackageIconUrl>https://raw.githubusercontent.com/manigandham/serilog-sinks-googlecloudlogging/master/src/Serilog.Sinks.GoogleCloudLogging/serilog-sink-nuget.png</PackageIconUrl>
     <PackageTags>serilog; sink; google cloud; stackdriver; logging;</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>https://github.com/manigandham/serilog-sinks-googlecloudlogging/blob/master/CHANGELOG.md</PackageReleaseNotes>
-    <PackageProjectUrl>https://manigandham.com/post/serilog-sinks-googlecloudlogging</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/manigandham/serilog-sinks-googlecloudlogging</RepositoryUrl>
+    <PackageReleaseNotes>https://github.com/bielu/serilog-sinks-lazygooglecloudlogging/blob/master/CHANGELOG.md</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/bielu/serilog-sinks-lazygooglecloudlogging</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/bielu/serilog-sinks-lazygooglecloudlogging</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <TargetFrameworks>net8.0;net6.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>net8.0;net6.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+    <RootNamespace>Serilog.Sinks.LazyGoogleCloudLogging</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,8 +35,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Serilog" Version="4.0.0" />
-    <PackageReference Condition="'$(TargetFramework)' == 'net6.0'" Include="System.Text.Encodings.Web" Version="6.0.0" />
+    <PackageReference Include="Serilog" Version="4.2.0" />
+    <PackageReference Condition="'$(TargetFramework)' == 'net6.0'" Include="System.Text.Encodings.Web" Version="8.0.0" />
     <PackageReference Condition="'$(TargetFramework)' != 'net6.0'" Include="System.Text.Encodings.Web" Version="8.0.0" />
   </ItemGroup>
 

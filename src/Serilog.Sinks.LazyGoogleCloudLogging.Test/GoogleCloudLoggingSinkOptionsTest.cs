@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Xunit;
 
-namespace Serilog.Sinks.GoogleCloudLogging.Test;
+namespace Serilog.Sinks.LazyGoogleCloudLogging.Test;
 
 public class GoogleCloudLoggingSinkOptionsTest
 {
