@@ -2,15 +2,15 @@
 
 Serilog sink that writes events to [Google Cloud Logging](https://cloud.google.com/logging/).
 
--   Built for `net6.0`, `net5.0`, `netstandard2.0`
+-   Built for `net8.0`, `net6.0`
 -   [Release Notes](CHANGELOG.md)
 
 ## Usage
 
-#### Install [package from Nuget](https://www.nuget.org/packages/Serilog.Sinks.GoogleCloudLogging/):
+#### Install [package from Nuget](https://www.nuget.org/packages/Serilog.Sinks.LazyGoogleCloudLogging/):
 
 ```
-dotnet add package Serilog.Sinks.GoogleCloudLogging
+dotnet add package Serilog.Sinks.LazyGoogleCloudLogging
 ```
 
 #### Configure in code:
